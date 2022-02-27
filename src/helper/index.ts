@@ -1,6 +1,8 @@
 import { camelCase } from 'lodash';
 
-export const camelCaseKeys = (obj: Array<Object> | Record<string, any>): typeof obj => {
+export const camelCaseKeys = (
+    obj: Array<Object> | Record<string, any>
+): typeof obj => {
     if (Array.isArray(obj)) {
         return obj.map((v) => camelCaseKeys(v));
     } else if (obj != null && obj.constructor === Object) {
@@ -23,3 +25,6 @@ export async function sleep(fn: any, ms = 3000) {
     return fn();
 }
 
+export const getRandomInt = (max: number): number => {
+    return Math.floor(Math.random() * max);
+};

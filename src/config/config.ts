@@ -1,1 +1,1 @@
-export const repo = '';
+export const repo = '/revamp_js_prjs_to_vue/';
