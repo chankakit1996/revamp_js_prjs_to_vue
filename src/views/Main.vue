@@ -1,4 +1,5 @@
 <template>
+    <ModalMenuSlider />
     <ExpenseTracker />
     <MovieSeatBooking />
     <HangMan />
@@ -10,9 +11,16 @@ import { defineComponent } from 'vue';
 import HangMan from '@/components/HangMan.vue';
 import InfiniteScrollBlog from '@/components/InfiniteScrollBlog.vue';
 import ExpenseTracker from '@/components/ExpenseTracker.vue';
+import ModalMenuSlider from '@/components/ModalMenuSlider.vue';
 
 export default defineComponent({
-    components: { MovieSeatBooking, HangMan, InfiniteScrollBlog, ExpenseTracker },
+    components: {
+        MovieSeatBooking,
+        HangMan,
+        InfiniteScrollBlog,
+        ExpenseTracker,
+        ModalMenuSlider,
+    },
     name: 'Main',
     setup(props, { attrs, slots, emit, expose }) {
         return {};
