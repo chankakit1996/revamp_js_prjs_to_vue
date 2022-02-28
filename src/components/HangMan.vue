@@ -151,7 +151,7 @@ export default defineComponent({
             if (wrongCount.value > 5) {
                 return 'lose';
             }
-            if (letter.every(l => correctLetters.value.includes(l))) {
+            if (letter.every((l) => correctLetters.value.includes(l))) {
                 return 'win';
             }
             return '';
@@ -166,9 +166,9 @@ export default defineComponent({
         });
 
         const reset = () => {
-            words.value = getWords()
-            guessLetters.value = []
-        }
+            words.value = getWords();
+            guessLetters.value = [];
+        };
 
         onMounted(() => {
             window.addEventListener('keydown', initGame);
@@ -187,7 +187,7 @@ export default defineComponent({
             wrongCount,
             status,
             finalMsg,
-            reset
+            reset,
         };
     },
 });
@@ -237,17 +237,17 @@ h1 {
     display: flex;
     flex-direction: column;
     text-align: right;
-}
 
-.wrong-letters-container p {
-    margin: 0 0 5px;
-}
+    p {
+        margin: 0 0 5px;
+    }
 
-.wrong-letters-container span {
-    font-size: 24px;
+    span {
+        font-size: 24px;
 
-    &:not(:last-child)::after {
-        content: ',';
+        &:not(:last-child)::after {
+            content: ',';
+        }
     }
 }
 
@@ -288,24 +288,24 @@ h1 {
     box-shadow: 0 15px 10px 3px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: center;
-}
 
-.popup button {
-    cursor: pointer;
-    background-color: #fff;
-    color: #2980b9;
-    border: 0;
-    margin-top: 20px;
-    padding: 12px 20px;
-    font-size: 16px;
-}
+    button {
+        cursor: pointer;
+        background-color: #fff;
+        color: #2980b9;
+        border: 0;
+        margin-top: 20px;
+        padding: 12px 20px;
+        font-size: 16px;
 
-.popup button:active {
-    transform: scale(0.98);
-}
+        &:active {
+            transform: scale(0.98);
+        }
 
-.popup button:focus {
-    outline: 0;
+        &:focus {
+            outline: 0;
+        }
+    }
 }
 
 .notification-container {
@@ -319,9 +319,9 @@ h1 {
     &.show {
         transform: translateY(-50px);
     }
-}
 
-.notification-container p {
-    margin: 0;
+    p {
+        margin: 0;
+    }
 }
 </style>
