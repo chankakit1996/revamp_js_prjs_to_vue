@@ -56,7 +56,8 @@ export default defineComponent({
                     `https://jsonplaceholder.typicode.com/posts?_limit=${limit.value}&_page=${page.value}`
                 );
                 page.value++;
-                posts.value = await res.json();
+                const data = await res.json();
+                posts.value = posts.value.concat(data)
                 showLoader.value = false;
             }, 2000);
         };
@@ -92,10 +93,10 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     max-height: 100vh;
     margin: 0;
-    padding-bottom: 100px;
+    padding-bottom: 80px;
     overflow: auto;
     position: relative;
 }
