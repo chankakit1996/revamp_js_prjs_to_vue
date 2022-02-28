@@ -11,41 +11,71 @@
                 <line x1="20" y1="230" x2="100" y2="230" />
 
                 <!-- Head -->
-                <circle cx="140" cy="70" r="20" v-if="lte(1)" />
+                <circle cx="140" cy="70" r="20" v-if="wrongCount > 0" />
                 <!-- Body -->
-                <line x1="140" y1="90" x2="140" y2="150" v-if="lte(2)" />
+                <line
+                    x1="140"
+                    y1="90"
+                    x2="140"
+                    y2="150"
+                    v-if="wrongCount > 1"
+                />
                 <!-- Arms -->
-                <line x1="140" y1="120" x2="120" y2="100" v-if="lte(3)" />
-                <line x1="140" y1="120" x2="160" y2="100" v-if="lte(4)" />
+                <line
+                    x1="140"
+                    y1="120"
+                    x2="120"
+                    y2="100"
+                    v-if="wrongCount > 2"
+                />
+                <line
+                    x1="140"
+                    y1="120"
+                    x2="160"
+                    y2="100"
+                    v-if="wrongCount > 3"
+                />
                 <!-- Legs -->
-                <line x1="140" y1="150" x2="120" y2="180" v-if="lte(5)" />
-                <line x1="140" y1="150" x2="160" y2="180" v-if="lte(6)" />
+                <line
+                    x1="140"
+                    y1="150"
+                    x2="120"
+                    y2="180"
+                    v-if="wrongCount > 4"
+                />
+                <line
+                    x1="140"
+                    y1="150"
+                    x2="160"
+                    y2="180"
+                    v-if="wrongCount > 5"
+                />
             </svg>
 
             <div class="wrong-letters-container">
-                <div id="wrong-letters" v-show="wrongLetters.length > 0">
+                <div id="wrong-letters" v-if="wrongCount > 0">
                     <p>Wrong</p>
-                    <span v-for="(letter, index) in wrongLetters">
+                    <span v-for="(letter, index) in wrongWords">
                         {{ letter }}
                     </span>
                 </div>
             </div>
 
             <div class="word" id="word">
-                <span class="letter" v-for="(letter, index) in correctLetters">
-                    {{ letter }}
+                <span class="letter" v-for="(letter, index) in words">
+                    {{ guessLetters.includes(letter) ? letter : '' }}
                 </span>
             </div>
         </div>
 
         <!-- Container for final message -->
-        <div class="popup-container" id="popup-container" v-show="!playable">
+        <div class="popup-container" id="popup-container" v-if="status">
             <div class="popup">
                 <h2 id="final-message">
                     {{ finalMsg }}
                 </h2>
-                <h3 id="final-message-reveal-word">
-                    {{ revalMsg }}
+                <h3 id="final-message-reveal-word" v-if="status == 'lose'">
+                    {{ `... the word was ${words}` }}
                 </h3>
                 <button id="play-button" @click="reset">Play Again</button>
             </div>
@@ -55,100 +85,108 @@
         <div
             class="notification-container"
             id="notification-container"
-            :class="[showNotification ? 'show' : '']"
+            :class="notification ? 'show' : ''"
         >
             <p>You have already entered this letter</p>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onBeforeUnmount, onMounted, Ref, ref } from 'vue';
+import {
+    computed,
+    defineComponent,
+    onBeforeUnmount,
+    onMounted,
+    Ref,
+    ref,
+} from 'vue';
+
+const getWords = () => {
+    // const words = ['application', 'programming', 'interface', 'wizard'];
+    const words = ['application'];
+    return words[Math.floor(Math.random() * words.length)];
+};
+
+const showNotification = (v: Ref<boolean>) => {
+    v.value = true;
+    console.log(v);
+    setTimeout(() => {
+        v.value = false;
+    }, 20000);
+};
 
 export default defineComponent({
     name: 'Hang Man',
     setup(props, { attrs, slots, emit, expose }) {
-        const wrongCount = ref(0);
-        const lte = (num: number) => {
-            return wrongCount.value >= num;
-        };
-        const words = ['application', 'programming', 'interface', 'wizard'];
-        // const words = ['application'];
-        let selectedWord = ref(words[Math.floor(Math.random() * words.length)]);
-        const selectedLetter = computed(() => {
-            return Array.from(selectedWord.value);
-        })
-        const correctLetters = ref(Array(selectedWord.value.length))
-        const wrongLetters: Ref<string[]> = ref([]);
-        const showNotification = ref(false);
-        let finalMsg = ref(``);
-        let revalMsg = ref(``);
-        let playable = ref(true);
-        const init = (e: KeyboardEvent) => {
-            if (playable.value) {
-                if (e.keyCode >= 65 && e.keyCode <= 90) {
-                    const inputLetter = e.key.toLowerCase();
-                    let index = selectedLetter.value.indexOf(inputLetter);
-                    if (
-                        correctLetters.value.includes(inputLetter) ||
-                        wrongLetters.value.includes(inputLetter)
-                    ) {
-                        showNotification.value = true;
-                        setTimeout(() => {
-                            showNotification.value = false;
-                        }, 2000);
-                        return;
-                    }
-                    if (index != -1) {
-                        while (index != -1) {
-                            correctLetters.value[index] = inputLetter;
-                            index = selectedLetter.value.indexOf(
-                                inputLetter,
-                                index + 1
-                            );
-                        }
-                        if (correctLetters.value.join('') == selectedWord.value) {
-                            finalMsg.value = `Congratulations! You won! 😃`;
-                            revalMsg.value = ``;
-                            playable.value = false;
-                        }
-                    } else {
-                        wrongCount.value++;
-                        wrongLetters.value.push(inputLetter);
-                        if (wrongCount.value > 5) {
-                            playable.value = false;
-                            finalMsg.value = `Unfortunately you lost. 😕`;
-                            revalMsg.value = `...the word was: ${selectedWord.value}`;
-                        }
-                    }
-                }
+        const words = ref(getWords());
+        const letter = words.value.split('');
+        const guessLetters: Ref<string[]> = ref([]);
+
+        const notification = ref(false);
+
+        const correctLetters = computed(() => {
+            return guessLetters.value.filter((l) => letter.includes(l));
+        });
+
+        const wrongWords = computed(() => {
+            return guessLetters.value.filter((l) => !letter.includes(l));
+        });
+        const wrongCount = computed(() => {
+            return wrongWords.value.length;
+        });
+
+        const initGame = (e: KeyboardEvent) => {
+            if (status.value) return;
+            if (e.keyCode < 65 || e.keyCode > 90) return;
+
+            const key = e.key.toLocaleLowerCase();
+            if (guessLetters.value.includes(key)) {
+                showNotification(notification);
+            } else {
+                guessLetters.value.push(key);
             }
         };
 
+        const status = computed(() => {
+            if (wrongCount.value > 5) {
+                return 'lose';
+            }
+            if (letter.every(l => correctLetters.value.includes(l))) {
+                return 'win';
+            }
+            return '';
+        });
+
+        const finalMsg = computed(() => {
+            if (status.value == 'win') {
+                return 'Congratulations! You won! 😃';
+            } else {
+                return 'Unfortunately you lost. 😕';
+            }
+        });
+
         const reset = () => {
-            selectedWord.value = words[Math.floor(Math.random() * words.length)];
-            playable.value = true
-            wrongLetters.value = []
-            correctLetters.value = Array(selectedWord.value.length)
-            wrongCount.value = 0
-        };
+            words.value = getWords()
+            guessLetters.value = []
+        }
 
         onMounted(() => {
-            window.addEventListener('keydown', init);
+            window.addEventListener('keydown', initGame);
         });
+
         onBeforeUnmount(() => {
-            window.removeEventListener('keydown', init);
+            window.removeEventListener('keydown', initGame);
         });
 
         return {
-            selectedWord,
-            selectedLetter,
-            showNotification,
+            notification,
+            words,
+            guessLetters,
             correctLetters,
-            wrongLetters,
+            wrongWords,
+            wrongCount,
+            status,
             finalMsg,
-            revalMsg,
-            playable,
-            lte,
             reset
         };
     },
@@ -277,13 +315,13 @@ h1 {
     position: absolute;
     bottom: -50px;
     transition: transform 0.3s ease-in-out;
+
+    &.show {
+        transform: translateY(-50px);
+    }
 }
 
 .notification-container p {
     margin: 0;
-}
-
-.notification-container.show {
-    transform: translateY(-50px);
 }
 </style>
