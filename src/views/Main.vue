@@ -1,4 +1,5 @@
 <template>
+    <MemoryCards />
     <ModalMenuSlider />
     <ExpenseTracker />
     <MovieSeatBooking />
@@ -6,12 +7,13 @@
     <InfiniteScrollBlog />
 </template>
 <script lang="ts">
-import MovieSeatBooking from '@/components/MovieSeatBooking.vue';
+import MovieSeatBooking from '@/components/movie-seat-booking/MovieSeatBooking.vue';
 import { defineComponent } from 'vue';
-import HangMan from '@/components/HangMan.vue';
-import InfiniteScrollBlog from '@/components/InfiniteScrollBlog.vue';
-import ExpenseTracker from '@/components/ExpenseTracker.vue';
-import ModalMenuSlider from '@/components/ModalMenuSlider.vue';
+import HangMan from '@/components/hang-man/HangMan.vue';
+import InfiniteScrollBlog from '@/components/infinite-scroll-blog/InfiniteScrollBlog.vue';
+import ExpenseTracker from '@/components/expense-tracker/ExpenseTracker.vue';
+import ModalMenuSlider from '@/components/modal-menu-slider/ModalMenuSlider.vue';
+import MemoryCards from '@/components/memory-cards/MemoryCards.vue';
 
 export default defineComponent({
     components: {
@@ -20,6 +22,7 @@ export default defineComponent({
         InfiniteScrollBlog,
         ExpenseTracker,
         ModalMenuSlider,
+        MemoryCards,
     },
     name: 'Main',
     setup(props, { attrs, slots, emit, expose }) {

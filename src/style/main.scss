@@ -1,3 +1,7 @@
+@import 'animations';
+@import 'mixins';
+@import 'variables';
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -16,5 +20,9 @@ body {
 }
 
 input:focus-visible {
+  outline: none;
+}
+
+div:focus-visible {
   outline: none;
 }

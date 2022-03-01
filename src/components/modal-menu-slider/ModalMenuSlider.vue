@@ -1,5 +1,5 @@
 <template>
-    <div class="modal-menu-slider-wrapper" :class="showNav ? 'show-nav' : ''">
+    <div class="modal-menu-slider-wrapper" :class="showNav ? 'show-nav' : ''" ref="wrapper">
         <nav id="navbar" ref="navRef">
             <div class="logo">
                 <img
@@ -153,9 +153,9 @@ export default defineComponent({
         const menuRef = ref();
         const signUpRef = ref();
         const modalCrossRef = ref();
+        const wrapper = ref()
 
         const handler = (e: MouseEvent) => {
-            console.log(e.target);
             if (signUpRef.value.contains(e.target)) {
                 showModal.value = !showModal.value;
             } else if (
@@ -173,11 +173,11 @@ export default defineComponent({
             }
         };
         onMounted(() => {
-            window.addEventListener('click', handler);
+            wrapper.value.addEventListener('click', handler);
         });
 
         onBeforeUnmount(() => {
-            window.removeEventListener('click', handler);
+            wrapper.value.removeEventListener('click', handler);
         });
 
         return {
@@ -188,6 +188,7 @@ export default defineComponent({
             menuRef,
             signUpRef,
             modalCrossRef,
+            wrapper
         };
     },
 });

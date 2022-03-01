@@ -1,5 +1,5 @@
 <template>
-    <div class="hang-man-wrapper">
+    <div class="hang-man-wrapper" ref="wrapper" tabindex="0">
         <h1>Hangman</h1>
         <p>Find the hidden word - Enter a letter</p>
         <div class="game-container">
@@ -121,6 +121,7 @@ export default defineComponent({
         const words = ref(getWords());
         const letter = words.value.split('');
         const guessLetters: Ref<string[]> = ref([]);
+        const wrapper = ref()
 
         const notification = ref(false);
 
@@ -136,6 +137,7 @@ export default defineComponent({
         });
 
         const initGame = (e: KeyboardEvent) => {
+            console.log(e)
             if (status.value) return;
             if (e.keyCode < 65 || e.keyCode > 90) return;
 
@@ -171,11 +173,11 @@ export default defineComponent({
         };
 
         onMounted(() => {
-            window.addEventListener('keydown', initGame);
+            wrapper.value.addEventListener('keydown', initGame);
         });
 
         onBeforeUnmount(() => {
-            window.removeEventListener('keydown', initGame);
+            wrapper.value.removeEventListener('keydown', initGame);
         });
 
         return {
@@ -188,6 +190,7 @@ export default defineComponent({
             status,
             finalMsg,
             reset,
+            wrapper
         };
     },
 });
