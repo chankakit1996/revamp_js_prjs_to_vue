@@ -1,5 +1,6 @@
 <template>
     <div class="main-wrapper">
+        <ExchangeRate />
         <MemoryCards />
         <ModalMenuSlider />
         <ExpenseTracker />
@@ -16,16 +17,18 @@ import InfiniteScrollBlog from '@/components/infinite-scroll-blog/InfiniteScroll
 import ExpenseTracker from '@/components/expense-tracker/ExpenseTracker.vue';
 import ModalMenuSlider from '@/components/modal-menu-slider/ModalMenuSlider.vue';
 import MemoryCards from '@/components/memory-cards/MemoryCards.vue';
+import ExchangeRate from '@/components/exchange-rate/ExchangeRate.vue';
 
 export default defineComponent({
     components: {
-        MovieSeatBooking,
-        HangMan,
-        InfiniteScrollBlog,
-        ExpenseTracker,
-        ModalMenuSlider,
-        MemoryCards,
-    },
+    MovieSeatBooking,
+    HangMan,
+    InfiniteScrollBlog,
+    ExpenseTracker,
+    ModalMenuSlider,
+    MemoryCards,
+    ExchangeRate
+},
     name: 'Main',
     setup(props, { attrs, slots, emit, expose }) {
         return {};
