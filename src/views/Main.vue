@@ -1,10 +1,12 @@
 <template>
-    <MemoryCards />
-    <ModalMenuSlider />
-    <ExpenseTracker />
-    <MovieSeatBooking />
-    <HangMan />
-    <InfiniteScrollBlog />
+    <div class="main-wrapper">
+        <MemoryCards />
+        <ModalMenuSlider />
+        <ExpenseTracker />
+        <MovieSeatBooking />
+        <HangMan />
+        <InfiniteScrollBlog />
+    </div>
 </template>
 <script lang="ts">
 import MovieSeatBooking from '@/components/movie-seat-booking/MovieSeatBooking.vue';
@@ -31,4 +33,10 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.main-wrapper {
+    > :deep(div) {
+        position: relative;
+    }
+}
+</style>

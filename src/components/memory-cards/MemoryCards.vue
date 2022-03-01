@@ -1,12 +1,16 @@
 <template>
     <div class="memory-cards-wrapper">
-        <button id="clear" class="clear btn">
+        <button id="clear" class="clear btn" @click="resetCard">
             <i class="fas fa-trash"></i> Clear Cards
         </button>
 
         <h1>
             Memory Cards
-            <button id="show" class="btn btn-small">
+            <button
+                id="show"
+                class="btn btn-small"
+                @click="showAddCard = !showAddCard"
+            >
                 <i class="fas fa-plus"></i> Add New Card
             </button>
         </h1>
@@ -15,25 +19,26 @@
             <div
                 class="card"
                 v-for="(card, index) in cards"
-                :class="
-                    (currentCard.flipped ? 'show-answer' : '',
+                :class="[
+                    card.flipped ? 'show-answer' : '',
                     currentIndex == index ? 'active' : '',
-                    currentIndex > index ? 'right' : 'left')
-                "
+                    currentIndex > index ? 'right' : '',
+                    currentIndex < index ? 'left' : '',
+                ]"
             >
                 <div
                     class="inner-card"
                     :key="card.question"
-                    @click="currentCard.flipped = !currentCard.flipped"
+                    @click="card.flipped = !card.flipped"
                 >
-                    <div class="inner-card-back" v-if="currentCard.flipped">
+                    <div class="inner-card-back" v-if="card.flipped">
                         <p>
-                            {{ currentCard.answer }}
+                            {{ card.answer }}
                         </p>
                     </div>
                     <div class="inner-card-front" v-else>
                         <p>
-                            {{ currentCard.question }}
+                            {{ card.question }}
                         </p>
                     </div>
                 </div>
@@ -46,7 +51,11 @@
             </button>
 
             <p id="current">
-                {{ `${currentIndex + 1}/${cards.length}` }}
+                {{
+                    cards.length > 0
+                        ? `${currentIndex + 1}/${cards.length}`
+                        : ''
+                }}
             </p>
 
             <button id="next" class="nav-button" @click="updateCard(1)">
@@ -54,10 +63,18 @@
             </button>
         </div>
 
-        <div id="add-container" class="add-container">
+        <div
+            id="add-container"
+            class="add-container"
+            :class="showAddCard ? 'show' : ''"
+        >
             <h1>
                 Add New Card
-                <button id="hide" class="btn btn-small btn-ghost">
+                <button
+                    id="hide"
+                    class="btn btn-small btn-ghost"
+                    @click="showAddCard = !showAddCard"
+                >
                     <i class="fas fa-times"></i>
                 </button>
             </h1>
@@ -67,46 +84,81 @@
                 <textarea
                     id="question"
                     placeholder="Enter question..."
+                    v-model="question"
                 ></textarea>
             </div>
 
             <div class="form-group">
                 <label for="answer">Answer</label>
-                <textarea id="answer" placeholder="Enter Answer..."></textarea>
+                <textarea
+                    id="answer"
+                    placeholder="Enter Answer..."
+                    v-model="answer"
+                ></textarea>
             </div>
 
-            <button id="add-card" class="btn">
+            <button id="add-card" class="btn" @click="addCard">
                 <i class="fas fa-plus"></i> Add Card
             </button>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, Ref, ref } from 'vue';
+
+interface Card {
+    question: string;
+    answer: string;
+    flipped: boolean;
+}
+
+const localStorageItem = 'memoryCards';
+
+const getCard = () => {
+    const cards = localStorage.getItem(localStorageItem);
+    if (cards) {
+        return JSON.parse(cards);
+    } else {
+        return [];
+    }
+};
 
 export default defineComponent({
     name: 'Memory Cards',
     setup(props, { attrs, slots, emit, expose }) {
         const currentIndex = ref(0);
-        const cards = ref([
-            {
-                question: 'q1',
-                answer: 'a1',
-                flipped: ref(false),
-            },
-            {
-                question: 'q2',
-                answer: 'a2',
-                flipped: ref(false),
-            },
-        ]);
+        const showAddCard = ref(false);
+        const question = ref();
+        const answer = ref();
+        const cards: Ref<Card[]> = ref(getCard());
         const currentCard = computed(() => {
             return cards.value[currentIndex.value];
         });
+
+        const addCard = () => {
+            if (!question.value || !answer.value) return;
+            cards.value.push({
+                question: question.value,
+                answer: answer.value,
+                flipped: false,
+            });
+            question.value = '';
+            answer.value = '';
+            showAddCard.value = !showAddCard.value;
+        };
+
         const updateCard = (v: number) => {
             const tmp = currentIndex.value + v;
             if (tmp >= cards.value.length || tmp < 0) return;
             currentIndex.value = currentIndex.value + v;
+        };
+
+        const resetCard = () => {
+            cards.value = [];
+        };
+
+        window.onbeforeunload = () => {
+            localStorage.setItem(localStorageItem, JSON.stringify(cards.value));
         };
 
         return {
@@ -114,6 +166,11 @@ export default defineComponent({
             currentCard,
             updateCard,
             currentIndex,
+            showAddCard,
+            addCard,
+            question,
+            answer,
+            resetCard,
         };
     },
 });
