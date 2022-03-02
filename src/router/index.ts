@@ -1,5 +1,4 @@
-
-import TypingGame from '@/components/typing-game/TypingGame.vue'
+import SpeakNumberGuessingGame from '@/components/speak-number-guessing-game/SpeakNumberGuessingGame.vue'
 import Main from '@/views/Main.vue'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { repo } from '../config/config'
@@ -11,9 +10,9 @@ const routes: Array<RouteRecordRaw> = [
     component: Main
   },
   {
-    name: 'typing-game',
-    path: '/typing-game',
-    component: TypingGame
+    name: 'game',
+    path: '/game',
+    component: SpeakNumberGuessingGame
   },
   {
     path: "/:catchAll(.*)",
