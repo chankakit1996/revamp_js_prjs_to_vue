@@ -44,7 +44,6 @@
                 id="text"
                 autocomplete="off"
                 placeholder="Type the word here..."
-                autofocus
                 v-model="inputWord"
                 @input="typing"
                 @input.once="countTime"
