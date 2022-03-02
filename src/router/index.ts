@@ -1,4 +1,3 @@
-import SpeakNumberGuessingGame from '@/components/speak-number-guessing-game/SpeakNumberGuessingGame.vue'
 import Main from '@/views/Main.vue'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { repo } from '../config/config'
