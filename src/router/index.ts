@@ -10,11 +10,6 @@ const routes: Array<RouteRecordRaw> = [
     component: Main
   },
   {
-    name: 'game',
-    path: '/game',
-    component: SpeakNumberGuessingGame
-  },
-  {
     path: "/:catchAll(.*)",
     redirect: '/',
   },
